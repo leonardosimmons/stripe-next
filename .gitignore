@@ -1,4 +1,3 @@
-
 # dependencies
 /node_modules
 /.pnp
@@ -11,6 +10,13 @@
 /build
 /dist
 
+# next.js build output
+.next
+/out/
+
+
+# vercel
+.vercel
 
 # misc
 .DS_Store
@@ -27,14 +33,9 @@ yarn-error.log*
 
 
 # User
-/public/assets
 /src/buffer
+/src/pages/test.tsx
 /src/*.txt
-*.png
-*.jpg
-*.JPG
-*.jpeg
-*.svg
-*.mp4
 favicon.ico
 temp.tsx
+.vscode
