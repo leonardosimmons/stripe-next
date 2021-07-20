@@ -33,9 +33,10 @@ yarn-error.log*
 
 
 # User
-/src/buffer
-/src/pages/test.tsx
-/src/*.txt
+src/base
+src/buffer
+src/pages/test.tsx
+src/*.txt
 favicon.ico
 temp.tsx
 .vscode
