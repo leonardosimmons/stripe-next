@@ -1,27 +1,29 @@
 
 import React from 'react';
 import axios, { AxiosInstance } from 'axios';
-import { loadStripe, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
+import { loadStripe, PaymentIntent, PaymentIntentResult, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
+import { useStripeFormController } from './useStripeFormController';
 
 
 function useStripeController() {
   const stripe: Stripe | null = useStripe();
   const elements: StripeElements | null = useElements();
   const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
+  const form = useStripeFormController(stripe as Stripe, isLoading);
   const http: AxiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_BASE_API });
 
-  function orderComplete(stripe: Stripe, clientSecret: string, fn: () => void) {
-    stripe.retrievePaymentIntent(clientSecret).then((result) => {
-      const paymentIntent = result.paymentIntent;
-      const paymentIntentJson = JSON.stringify(paymentIntent, null, 2);
+  async function orderComplete(stripe: Stripe, clientSecret: string) {
+    await stripe.retrievePaymentIntent(clientSecret).then((result: PaymentIntentResult) => {
+      const paymentIntent: PaymentIntent | undefined = result.paymentIntent;
+      const paymentIntentJson: string = JSON.stringify(paymentIntent, null, 2);
         
-      document.querySelector(".sr-payment-form")!.classList.add("hidden");
-      document.querySelector("pre")!.textContent = paymentIntentJson;
+      form.wrapper.current!.classList.add("hidden");
+      form.pre.current!.textContent = paymentIntentJson;
 
-      document.querySelector(".sr-result")!.classList.remove("hidden");
+      form.result.current!.classList.remove("hidden");
       setTimeout(() => {
-        document.querySelector(".sr-result")!.classList.add("expand");
+        form.result.current!.classList.add("expand");
       }, 200);
     
       setIsLoading(false);
@@ -37,9 +39,9 @@ function useStripeController() {
     }, 4000);
   };
 
-  async function setupCardElement(key: string, elements: StripeElements, id: string, styles?: any) {
+  async function setupCardElement(key: string, elements: StripeElements, id: string, form?: any) {
     const stripe: Stripe | null = await loadStripe(key);
-    const style: any = styles;
+    const style: any = form;
   
     const card: StripeCardElement = elements.create("card", { style: style });
     card.mount(id);
@@ -67,6 +69,17 @@ function useStripeController() {
     elements,
     loading: isLoading,
     submit,
+    form: {
+      styles: {
+        button: form.button,
+        error: form.error,
+        pre: form.pre,
+        result: form.result,
+        spinner: form.spinner,
+        text: form.text,
+        wrapper: form.wrapper
+      }
+    },
     setup: {
       card: setupCardElement 
     }

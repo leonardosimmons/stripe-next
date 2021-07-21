@@ -3,12 +3,14 @@ import React from "react";
 
 import { CardElement } from "@stripe/react-stripe-js";
 import { useStripeController } from "../helpers/hooks/useStripeController";
-import { useStripeFormController } from "../helpers/hooks/useStripeFormController";
 
 
-const StripeCheckout: React.FunctionComponent = (): JSX.Element => {  
+type Props = {
+  config?: any;
+}
+
+const StripeCheckout: React.FunctionComponent<Props> = ({ config }): JSX.Element => {  
   const stripe = useStripeController();
-  const form = useStripeFormController(stripe);
 
   return (
     <div className="sr-main">
@@ -26,18 +28,18 @@ const StripeCheckout: React.FunctionComponent = (): JSX.Element => {
           id="card-errors" 
           className="sr-field-error" 
           role="alert"
-          ref={form.error}/>
-        <button id="submit" ref={form.button}>
+          ref={stripe.form.styles.error}/>
+        <button id="submit" ref={stripe.form.styles.button}>
           <div 
             id="spinner" 
             className="spinner hidden" 
-            ref={form.spinner}/>
-          <span id="button-text" ref={form.text}>Pay</span>
-          <span id="order-amount"></span>
+            ref={stripe.form.styles.spinner}/>
+          <span id="button-text" ref={stripe.form.styles.text}>{'Pay'}</span>
+          <span id="order-amount">{''}</span>
         </button>
       </form>
       <div className="sr-result hidden">
-        <p>Payment completed<br /></p>
+        <p>{'Payment completed'}<br /></p>
         <pre>
           <code></code>
         </pre>
