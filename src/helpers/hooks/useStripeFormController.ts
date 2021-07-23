@@ -1,6 +1,6 @@
 
-import { Stripe } from '@stripe/stripe-js';
 import React from 'react';
+import { Stripe } from '@stripe/stripe-js';
 
 
 function useStripeFormController(stripe: Stripe, loading: boolean) {
@@ -33,7 +33,18 @@ function useStripeFormController(stripe: Stripe, loading: boolean) {
     }
   }, [loading]);
 
+  function orderCompleted(note: string) {
+    formRef.current!.classList.add("hidden");
+    preRef.current!.textContent = note;
+
+    resultRef.current!.classList.remove("hidden");
+    setTimeout(() => {
+      resultRef.current!.classList.add("expand");
+    }, 200);
+  };
+
   return {
+    completed: orderCompleted,
     button: buttonRef,
     error: errorRef,
     pre: preRef,
