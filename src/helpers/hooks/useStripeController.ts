@@ -1,8 +1,16 @@
 
 import React from 'react';
 import axios, { AxiosInstance } from 'axios';
-import { loadStripe, PaymentIntent, PaymentIntentResult, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
+import { 
+  loadStripe, 
+  PaymentIntent, 
+  PaymentIntentResult, 
+  Stripe, 
+  StripeCardElement, 
+  StripeElements 
+} from '@stripe/stripe-js';
+
 import { useStripeFormController } from './useStripeFormController';
 
 
@@ -13,18 +21,19 @@ function useStripeController() {
   const form = useStripeFormController(stripe as Stripe, isLoading);
   const http: AxiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_BASE_API });
 
+  // Starts the order and creates client secret
+  // call at the start of checkout
+  async function createPaymentIntentToken<T>(url: string, items: Array<T>) {
+    const paymentIntentToken: any = http.post(url, { items });
+    return paymentIntentToken;
+  };
+
   async function orderComplete(stripe: Stripe, clientSecret: string) {
     await stripe.retrievePaymentIntent(clientSecret).then((result: PaymentIntentResult) => {
       const paymentIntent: PaymentIntent | undefined = result.paymentIntent;
       const paymentIntentJson: string = JSON.stringify(paymentIntent, null, 2);
         
-      form.wrapper.current!.classList.add("hidden");
-      form.pre.current!.textContent = paymentIntentJson;
-
-      form.result.current!.classList.remove("hidden");
-      setTimeout(() => {
-        form.result.current!.classList.add("expand");
-      }, 200);
+      form.completed(paymentIntentJson);
     
       setIsLoading(false);
     });
@@ -56,13 +65,11 @@ function useStripeController() {
     e.preventDefault();
     setIsLoading(true);
     
-    const key: string = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string;
-
-    console.log(key)
-    // create a payment intent
+    // submit payment to backend api
   };
 
   return {
+    createIntentToken: createPaymentIntentToken,
     completeOrder: orderComplete,
     current: stripe,
     error: showError,
