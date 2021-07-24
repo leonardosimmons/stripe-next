@@ -35,7 +35,6 @@ function useStripeFormController(stripe: Stripe, loading: boolean) {
 
   function orderCompleted(note: string) {
     formRef.current!.classList.add("hidden");
-    preRef.current!.textContent = note;
 
     resultRef.current!.classList.remove("hidden");
     setTimeout(() => {

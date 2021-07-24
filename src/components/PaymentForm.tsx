@@ -18,6 +18,7 @@ const StripeCheckout: React.FunctionComponent<Props> = ({ config }): JSX.Element
         id="payment-form" 
         className="sr-payment-form" 
         onSubmit={stripe.submit}
+        ref={stripe.form.styles.wrapper}
       >
         <div className="sr-combo-inputs-row">
           <div id="card-element" className="sr-input sr-card-element">

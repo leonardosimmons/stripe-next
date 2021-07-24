@@ -12,13 +12,8 @@ const stripePromise: Promise<Stripe | null> = getStripeKey().then((key: string |
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-  <>
-  {
-    stripePromise &&
     <Elements stripe={stripePromise}>    
       <Component {...pageProps} />
     </Elements>
-  }
-  </>
   )
 };
