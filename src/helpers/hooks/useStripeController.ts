@@ -1,7 +1,7 @@
 
 import React from 'react';
 import axios, { AxiosInstance } from 'axios';
-import { useElements, useStripe } from '@stripe/react-stripe-js';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { 
   loadStripe, 
   PaymentIntent, 
@@ -14,18 +14,41 @@ import {
 import { useStripeFormController } from './useStripeFormController';
 
 
+const testItems = [
+  {id: 123456789},
+  {id: 987654321},
+  {id: 543216789},
+  {id: 647583921},
+];
+
 function useStripeController() {
   const stripe: Stripe | null = useStripe();
   const elements: StripeElements | null = useElements();
-  const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
-  const form = useStripeFormController(stripe as Stripe, isLoading);
   const http: AxiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_BASE_API });
+  
+  const [ succeeded, setSucceeded ] = React.useState<boolean>(false);
+  const [ processing, setProcessing ] = React.useState<boolean>(false);
+  const [ clientSecret, setClientSecret ] = React.useState<string>('');
+  const [ disabled, setDisabled ] = React.useState<boolean>(true);
+  const [ error, setError ] = React.useState<string | null>('');
+  
+  const form = useStripeFormController(stripe as Stripe, processing);
 
-  // Starts the order and creates client secret
-  // call at the start of checkout
-  async function createPaymentIntentToken<T>(url: string, items: Array<T>) {
-    const paymentIntentToken: any = http.post(url, { items });
-    return paymentIntentToken;
+  // Create payment intent on page load
+  React.useEffect(() => {
+    // The amount should be calculated on the server
+    // Parent = which amount calculation (server side) should be used
+    http.post(process.env.NEXT_PUBLIC_CREATE_PAYMENT_INTENT_API!, { currency: 'usd', items: testItems })
+      .then((res) => res.data)
+      .then((data) => setClientSecret(data.clientSecret))
+      .catch((err) => {throw new Error(err)});
+  }, []);
+
+
+  // handles errors user encounters while typing
+  function handleChange(e: any): void {
+    setDisabled(e.empty);
+    setError(e.error ? e.error.message : '');
   };
 
   async function orderComplete(stripe: Stripe, clientSecret: string) {
@@ -35,17 +58,17 @@ function useStripeController() {
         
       form.completed(paymentIntentJson);
     
-      setIsLoading(false);
+      setProcessing(false);
     });
   };
 
   function showError(errorMsgText: string, el: Element) {
-    setIsLoading(false);
-    const errorMsg: Element = el;
-    errorMsg!.textContent = errorMsgText;
-    setTimeout(() => {
-      errorMsg!.textContent = "";
-    }, 4000);
+    //setProcessing(false);
+    // const errorMsg: Element = el;
+    // errorMsg!.textContent = errorMsgText;
+    // setTimeout(() => {
+    //   errorMsg!.textContent = "";
+    // }, 4000);
   };
 
   async function setupCardElement(key: string, elements: StripeElements, id: string, form?: any) {
@@ -63,18 +86,31 @@ function useStripeController() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setIsLoading(true);
+    setProcessing(true);
     
-    // submit payment to backend api
+    const payload = await stripe?.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements?.getElement(CardElement)!
+      }
+    });
+
+    if (payload?.error) {
+      setError(`Payment failed ${payload.error.message}`);
+      setProcessing(false);
+    } else {
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
+    }
   };
 
   return {
-    createIntentToken: createPaymentIntentToken,
     completeOrder: orderComplete,
     current: stripe,
     error: showError,
+    errorCheck: handleChange,
     elements,
-    loading: isLoading,
+    processing: processing,
     submit,
     form: {
       styles: {
@@ -89,6 +125,18 @@ function useStripeController() {
     },
     setup: {
       card: setupCardElement 
+    },
+    status: {
+      succeeded,
+      setSucceeded,
+      processing,
+      setProcessing,
+      disabled,
+      setDisabled,
+      error,
+      setError,
+      clientSecret,
+      setClientSecret
     }
   };
 };
