@@ -29,78 +29,93 @@ function useStripeController() {
   const [ succeeded, setSucceeded ] = React.useState<boolean>(false);
   const [ processing, setProcessing ] = React.useState<boolean>(false);
   const [ clientSecret, setClientSecret ] = React.useState<string>('');
-  const [ disabled, setDisabled ] = React.useState<boolean>(true);
+  const [ disabled, setDisabled ] = React.useState<boolean>(false);
   const [ error, setError ] = React.useState<string | null>('');
   
   const form = useStripeFormController(stripe as Stripe, processing);
 
   // Create payment intent on page load
   React.useEffect(() => {
-    // The amount should be calculated on the server
-    // Parent = which amount calculation (server side) should be used
     http.post(process.env.NEXT_PUBLIC_CREATE_PAYMENT_INTENT_API!, { currency: 'usd', items: testItems })
       .then((res) => res.data)
       .then((data) => setClientSecret(data.clientSecret))
-      .catch((err) => {throw new Error(err)});
+      .catch((err) => showError('Unable to load Stripe'));
   }, []);
 
 
-  // handles errors user encounters while typing
+  // handles errors user may encounter while typing
   function handleChange(e: any): void {
     setDisabled(e.empty);
-    setError(e.error ? e.error.message : '');
+    showError(e.message);
   };
 
   async function orderComplete(stripe: Stripe, clientSecret: string) {
-    await stripe.retrievePaymentIntent(clientSecret).then((result: PaymentIntentResult) => {
-      const paymentIntent: PaymentIntent | undefined = result.paymentIntent;
-      const paymentIntentJson: string = JSON.stringify(paymentIntent, null, 2);
+    try {
+      await stripe.retrievePaymentIntent(clientSecret)
+        .then((result: PaymentIntentResult) => {
+          const paymentIntent: PaymentIntent | undefined = result.paymentIntent;
+          const paymentIntentJson: string = JSON.stringify(paymentIntent, null, 2);
+            
+          form.completed(paymentIntentJson);
         
-      form.completed(paymentIntentJson);
-    
-      setProcessing(false);
-    });
+          setProcessing(false);
+        }
+      );
+    }
+    catch(err) {
+      showError('Something went wrong! Unable to complete this transaction.');
+    }
   };
 
-  function showError(errorMsgText: string, el: Element) {
-    //setProcessing(false);
-    // const errorMsg: Element = el;
-    // errorMsg!.textContent = errorMsgText;
-    // setTimeout(() => {
-    //   errorMsg!.textContent = "";
-    // }, 4000);
+  function showError(errorMsgText: string) {
+    setProcessing(false);
+    let errorMsg: string = errorMsgText;
+    setError(errorMsg);
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
   };
 
   async function setupCardElement(key: string, elements: StripeElements, id: string, form?: any) {
-    const stripe: Stripe | null = await loadStripe(key);
-    const style: any = form;
-  
-    const card: StripeCardElement = elements.create("card", { style: style });
-    card.mount(id);
-  
-    return {
-      stripe: stripe,
-      card: card
-    };
+    try {
+      const stripe: Stripe | null = await loadStripe(key);
+      const style: any = form;
+    
+      const card: StripeCardElement = elements.create("card", { style: style });
+      card.mount(id);
+    
+      return {
+        stripe: stripe,
+        card: card
+      };
+    }
+     catch(err) {
+       showError('Unable to load Stripe');
+     }
   };
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setProcessing(true);
-    
-    const payload = await stripe?.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements?.getElement(CardElement)!
-      }
-    });
 
-    if (payload?.error) {
-      setError(`Payment failed ${payload.error.message}`);
-      setProcessing(false);
-    } else {
-      setError(null);
-      setProcessing(false);
-      setSucceeded(true);
+    try {
+      const payload = await stripe?.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements?.getElement(CardElement)!
+        }
+      });
+  
+      if (payload?.error) {
+        setError(`Payment failed ${payload.error.message}`);
+        setProcessing(false);
+      } else {
+        setError(null);
+        setProcessing(false);
+        setSucceeded(true);
+      }
+    }
+    catch(err) {
+      showError('Error: Unable to process your order at this time, please try again.');
     }
   };
 
