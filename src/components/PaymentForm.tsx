@@ -60,15 +60,15 @@ const StripeCheckout: React.FunctionComponent<Props> = ({ config }): JSX.Element
                 <span id="order-amount">{` ${formatAmount(testToken)}`}</span>
               </>
             : stripe.status.processing
-              ? <span ref={stripe.form.styles.text}></span>
-              : <span id="button-text" ref={stripe.form.styles.text}>{'Thank you'}</span>
+              ? <span id="button-text" ref={stripe.form.styles.text}></span>
+              : <span id="button-text" ref={stripe.form.styles.text}></span>
           }
         </button>
       </form>
-      <div className="sr-result hidden">
-        <p>{'Payment completed'}<br /></p>
-        <pre>
-          <code></code>
+      <div className="sr-result hidden" ref={stripe.form.styles.result}>
+        <p style={{textAlign: 'center', fontWeight: 'bold'}}>{'Payment completed'}<br /></p>
+        <pre ref={stripe.form.styles.pre}>
+          <iframe src="https://giphy.com/embed/l41lS0IgRIFkAuA5G" width="280" height="280" frameBorder="0" className="giphy-embed" style={{margin: '0 auto'}} allowFullScreen></iframe><p><a href="https://giphy.com/gifs/dancing-friday-weekend-l41lS0IgRIFkAuA5G"></a></p>
         </pre>
       </div>
     </div>
