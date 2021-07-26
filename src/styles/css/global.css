@@ -50,10 +50,11 @@ body {
 
 .sr-field-error {
   color: var(--font-color);
-  text-align: left;
+  text-align: center;
   font-size: 13px;
   line-height: 17px;
-  margin-top: 12px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 /* Inputs */
