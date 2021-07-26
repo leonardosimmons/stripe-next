@@ -52,14 +52,16 @@ const StripeCheckout: React.FunctionComponent<Props> = ({ config }): JSX.Element
             className="spinner hidden" 
             ref={stripe.form.styles.spinner}/>
           {
-            !stripe.status.succeeded 
+            !stripe.status.succeeded && !stripe.status.processing
             ? <>  
                 <span 
                 id="button-text" 
                 ref={stripe.form.styles.text}>{'Pay'}</span>
                 <span id="order-amount">{` ${formatAmount(testToken)}`}</span>
               </>
-            : <span id="button-text" ref={stripe.form.styles.text}>{'Thank you'}</span>
+            : stripe.status.processing
+              ? <span ref={stripe.form.styles.text}></span>
+              : <span id="button-text" ref={stripe.form.styles.text}>{'Thank you'}</span>
           }
         </button>
       </form>
