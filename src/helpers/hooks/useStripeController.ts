@@ -29,6 +29,7 @@ function useStripeController() {
   const [ succeeded, setSucceeded ] = React.useState<boolean>(false);
   const [ processing, setProcessing ] = React.useState<boolean>(false);
   const [ clientSecret, setClientSecret ] = React.useState<string>('');
+  const [ paymentId, setPaymentId] = React.useState<string>('');
   const [ disabled, setDisabled ] = React.useState<boolean>(false);
   const [ error, setError ] = React.useState<string | null>('');
   
@@ -38,7 +39,10 @@ function useStripeController() {
   React.useEffect(() => {
     http.post(process.env.NEXT_PUBLIC_CREATE_PAYMENT_INTENT_API!, { currency: 'usd', items: testItems })
       .then((res) => res.data)
-      .then((data) => setClientSecret(data.clientSecret))
+      .then((data) => {
+        setPaymentId(data.paymentId);
+        setClientSecret(data.clientSecret);
+      })
       .catch((err) => showError('Unable to load Stripe'));
   }, []);
 
@@ -49,22 +53,11 @@ function useStripeController() {
     showError(e.message);
   };
 
-  async function orderComplete(stripe: Stripe, clientSecret: string) {
-    try {
-      await stripe.retrievePaymentIntent(clientSecret)
-        .then((result: PaymentIntentResult) => {
-          const paymentIntent: PaymentIntent | undefined = result.paymentIntent;
-          const paymentIntentJson: string = JSON.stringify(paymentIntent, null, 2);
-            
-          form.completed(paymentIntentJson);
-        
-          setProcessing(false);
-        }
-      );
-    }
-    catch(err) {
-      showError('Something went wrong! Unable to complete this transaction.');
-    }
+  async function orderComplete(note: string) {
+    form.completed(note);
+    setError(null);
+    setProcessing(false);
+    setSucceeded(true);
   };
 
   function showError(errorMsgText: string) {
@@ -99,19 +92,17 @@ function useStripeController() {
     setProcessing(true);
 
     try {
-      const payload = await stripe?.confirmCardPayment(clientSecret, {
+      const res = await stripe?.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements?.getElement(CardElement)!
         }
       });
   
-      if (payload?.error) {
-        setError(`Payment failed ${payload.error.message}`);
+      if (res?.error) {
+        setError(`Payment failed ${res.error.message}`);
         setProcessing(false);
       } else {
-        setError(null);
-        setProcessing(false);
-        setSucceeded(true);
+        orderComplete('Your order has been completed');
       }
     }
     catch(err) {
@@ -120,12 +111,10 @@ function useStripeController() {
   };
 
   return {
-    completeOrder: orderComplete,
     current: stripe,
     error: showError,
     errorCheck: handleChange,
     elements,
-    processing: processing,
     submit,
     form: {
       styles: {
