@@ -1,10 +1,12 @@
 
 import React from "react";
 
+import styles from './PaymentForm.module.scss';
+
 import { CardElement } from "@stripe/react-stripe-js";
-import { useStripeController } from "../helpers/hooks/useStripeController";
-import { formatAmount } from "../helpers/functions";
-import { AmountToken } from "../utils/types/custom/types";
+import { useStripeController } from "../../helpers/hooks/useStripeController";
+import { formatAmount } from "../../helpers/functions";
+import { AmountToken } from "../../utils/types/custom/types";
 
 
 const testToken: AmountToken = {
@@ -17,21 +19,21 @@ const StripeCheckout: React.FunctionComponent = (): JSX.Element => {
   const { errorCheck, form, status, submit } = useStripeController();
 
   return (
-    <div className="sr-main">
+    <div className={styles.main}>
       <form 
         id="payment-form" 
-        className="sr-payment-form" 
+        className={styles.paymentForm} 
         onSubmit={submit}
         ref={form.styles.wrapper}
       >
-        <div className="sr-combo-inputs-row">
-          <div id="card-element" className="sr-input sr-card-element">
+        <div className={styles.comboInputsRow}>
+          <div id="card-element" className={`${styles.input} ${styles.cardElement}`}>
             <CardElement onChange={errorCheck}/>
           </div>
         </div>
         <div 
           id="card-errors" 
-          className="sr-field-error" 
+          className={styles.fieldError} 
           role="alert"
           ref={form.styles.error}>
         { status.error 
@@ -61,7 +63,7 @@ const StripeCheckout: React.FunctionComponent = (): JSX.Element => {
           }
         </button>
       </form>
-      <div className="sr-result hidden" ref={form.styles.result}>
+      <div className={`${styles.result} hidden`} ref={form.styles.result}>
         <p style={{textAlign: 'center', fontWeight: 'bold'}}>{'Payment completed'}<br /></p>
         <pre ref={form.styles.pre}>
           <iframe src="https://giphy.com/embed/l41lS0IgRIFkAuA5G" width="280" height="280" frameBorder="0" className="giphy-embed" style={{margin: '0 auto'}} allowFullScreen></iframe><p><a href="https://giphy.com/gifs/dancing-friday-weekend-l41lS0IgRIFkAuA5G"></a></p>
