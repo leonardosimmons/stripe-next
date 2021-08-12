@@ -1,12 +1,12 @@
 
 import React from 'react';
 
-import PaymentForm from '../components/PaymentForm';
+import PaymentForm from '../components/payment-form/PaymentForm';
 
 
 const Index: React.FunctionComponent = (): JSX.Element => {
   return (
-    <div className="sr-root">
+    <div className="root">
       <PaymentForm />
     </div>
   );
