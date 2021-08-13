@@ -43,6 +43,7 @@ const StripeCheckout: React.FunctionComponent = (): JSX.Element => {
         </div>
         <button 
           id="submit" 
+          className={styles.button}
           ref={form.styles.button}
           disabled={status.disabled || status.processing || status.succeeded}>
           <div 

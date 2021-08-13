@@ -1,8 +1,6 @@
 
-
 import '../styles';
-import '../styles/css/global.css';
-import '../styles/css/normalize.css';
+import '../styles/normalize.css';
 import type { AppProps } from 'next/app';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
