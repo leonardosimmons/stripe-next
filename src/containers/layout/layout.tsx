@@ -30,7 +30,7 @@ const Layout: React.FunctionComponent<Props> = (
       </Head>
       <div id="backdrop-root" />
       <div id="modal-root" />
-      <div id="app" className={`${styles.app || ''} ${classes}`}>
+      <div id="app" className={`${styles.app || ''} ${classes || ''}`}>
         <nav className={`${styles.nav || ''}`}>
           {/* {add navbar} */}
         </nav>

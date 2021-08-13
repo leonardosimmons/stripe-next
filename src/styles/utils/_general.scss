@@ -1,4 +1,12 @@
 
+#top-of-site-pixel-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  top: 2px;
+  left: 0;
+}
+
 // hides the current element
 .hidden {
   display: none;
