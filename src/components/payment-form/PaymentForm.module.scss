@@ -31,31 +31,40 @@
 }
 
 /* Inputs */
-.input,
-.input[type="text"] {
-  border: 1px solid var(--gray-border);
-  border-radius: var(--radius);
-  padding: 5px 12px;
-  height: 44px;
-  width: 100%;
-  transition: box-shadow 0.2s ease;
-  background: white;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
+.input {
+  &,
+  &[type="text"] {    
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    padding: 5px 12px;
+    height: 44px;
+    width: 100%;
+    transition: box-shadow 0.2s ease;
+    background: white;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &:focus,
+  &[type="text"]:focus {
+    box-shadow: 0 0 0 1px rgba(50, 151, 211, 0.3), 0 1px 1px 0 rgba(0, 0, 0, 0.07),
+    0 0 0 4px rgba(50, 151, 211, 0.3);
+    outline: none;
+    z-index: 9;
+  }
+
+  &::placeholder,
+  &[type="text"]::placeholder {
+    color: var(--gray-light);
+  }
 }
-.input:focus,
-.input[type="text"]:focus,
-.button:focus,
+
 .focused {
   box-shadow: 0 0 0 1px rgba(50, 151, 211, 0.3), 0 1px 1px 0 rgba(0, 0, 0, 0.07),
     0 0 0 4px rgba(50, 151, 211, 0.3);
   outline: none;
   z-index: 9;
-}
-.input::placeholder,
-.input[type="text"]::placeholder {
-  color: var(--gray-light);
 }
 
 .result {
@@ -66,13 +75,16 @@
   transition: height 1s ease;
   color: var(--font-color);
   overflow: auto;
+
+  & code {
+    overflow: scroll;
+  }
+
+  &.expand {
+    height: 350px;
+  }
 }
-.result code {
-  overflow: scroll;
-}
-.result.expand {
-  height: 350px;
-}
+
 
 .button {
   background: var(--accent-color);
@@ -87,29 +99,27 @@
   display: block;
   box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
   width: 100%;
-}
 
-.button:hover {
-  filter: contrast(115%);
-}
-
-.button:active {
-  transform: translateY(0px) scale(0.98);
-  filter: brightness(0.9);
-}
-
-.button:disabled {
-  opacity: 0.5;
-  cursor: none;
-}
-
-
-/* Animated form */
-
-.root {
-  animation: 0.4s form-in;
-  animation-fill-mode: both;
-  animation-timing-function: ease;
+  &:focus {
+    box-shadow: 0 0 0 1px rgba(50, 151, 211, 0.3), 0 1px 1px 0 rgba(0, 0, 0, 0.07),
+    0 0 0 4px rgba(50, 151, 211, 0.3);
+    outline: none;
+    z-index: 9;
+  }
+  
+  &:hover {
+    filter: contrast(115%);
+  }
+  
+  &:active {
+    transform: translateY(0px) scale(0.98);
+    filter: brightness(0.9);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: none;
+  }
 }
 
 
