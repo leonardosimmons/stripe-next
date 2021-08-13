@@ -34,6 +34,7 @@ yarn-error.log*
 
 # User
 /src/base
+/src/buffer
 src/*.txt
 favicon.ico
 temp.tsx
