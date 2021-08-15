@@ -4,6 +4,7 @@ import React from 'react';
 
 type Props = {
   bgImage?: string;
+  classes?: string;
   styles?: any;
   type: "box" | "container" | "content" | "wrapper";
 }
@@ -11,6 +12,7 @@ type Props = {
 const Container: React.FunctionComponent<Props> = (
   {
     bgImage,
+    classes,
     styles,
     type,
     children
@@ -18,17 +20,16 @@ const Container: React.FunctionComponent<Props> = (
 ) => {
   return (
     <div 
-      className={`
-        ${type === "box" 
-          ? styles.box
-          : type === "container"
-            ? styles.container 
-            : type === "content" 
-              ? styles.content
-              : type === "wrapper"
-                ? styles.wrapper
-                : ''
-         }
+      className={`${type === "box" 
+      ? styles.box
+      : type === "container"
+        ? styles.container 
+        : type === "content" 
+          ? styles.content
+          : type === "wrapper"
+            ? styles.wrapper
+            : ''
+         } ${classes || ''}
       `}
       style={{ backgroundImage: `${ bgImage ? 'url(' + bgImage + ')' : ''}`}}
     >
