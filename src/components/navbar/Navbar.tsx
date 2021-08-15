@@ -32,6 +32,7 @@ const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
           </Container>
           <Container type="content" styles={styles}>
             <p>{"How-to-use"}</p>
+            <p>{"How-to"}</p>
           </Container>
         </Grid>
       </Container>
