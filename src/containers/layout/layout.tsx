@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Head from 'next/head';
+import Navbar from '../../components/navbar/Navbar';
 
 
 type Props = {
@@ -32,7 +33,7 @@ const Layout: React.FunctionComponent<Props> = (
       <div id="modal-root" />
       <div id="app" className={`${styles.app || ''} ${classes || ''}`}>
         <nav className={`${styles.nav || ''}`}>
-          {/* {add navbar} */}
+          <Navbar />
         </nav>
         {header && <header className={`${styles.header || ''}`}>{header}</header>}
         {children && <main className={`${styles.main || ''}`}>{children}</main>}

@@ -4,15 +4,13 @@ import React from 'react';
 
 type Props = {
   bgImage?: string;
-  videoUrl?: string;
   styles?: any;
-  type: "box" | "content" | "wrapper";
+  type: "box" | "container" | "content" | "wrapper";
 }
 
 const Container: React.FunctionComponent<Props> = (
   {
     bgImage,
-    videoUrl,
     styles,
     type,
     children
@@ -22,12 +20,14 @@ const Container: React.FunctionComponent<Props> = (
     <div 
       className={`
         ${type === "box" 
-          ? styles.box 
-          : type === "content" 
-            ? styles.content
-            : type === "wrapper"
-              ? styles.wrapper
-              : ''
+          ? styles.box
+          : type === "container"
+            ? styles.container 
+            : type === "content" 
+              ? styles.content
+              : type === "wrapper"
+                ? styles.wrapper
+                : ''
          }
       `}
       style={{ backgroundImage: `${ bgImage ? 'url(' + bgImage + ')' : ''}`}}
