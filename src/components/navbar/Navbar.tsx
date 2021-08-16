@@ -23,7 +23,7 @@ const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
           <Container type="content" styles={styles}>
             <Logo 
               priority
-              src="/images/png/logo.png"
+              src="/images/logo.png"
               alt="logo"
               width= "68.5"
               height="68.5"

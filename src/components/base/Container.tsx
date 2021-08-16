@@ -19,8 +19,8 @@ const Container: React.FunctionComponent<Props> = (
   }
 ) => {
   return (
-    <div 
-      className={`${type === "box" 
+    <div className={`${ styles ?
+      type === "box" 
       ? styles.box
       : type === "container"
         ? styles.container 
@@ -29,7 +29,7 @@ const Container: React.FunctionComponent<Props> = (
           : type === "wrapper"
             ? styles.wrapper
             : ''
-         } ${classes || ''}
+       : ''} ${classes || ''}
       `}
       style={{ backgroundImage: `${ bgImage ? 'url(' + bgImage + ')' : ''}`}}
     >
