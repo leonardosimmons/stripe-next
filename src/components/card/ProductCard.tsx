@@ -2,13 +2,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { ProductCard as ProductCardType} from '../../utils/types/custom/types';
+import { PaymentType, ProductCard as ProductCardType} from '../../utils/types/custom/types';
 import Container from '../base/Container';
 import Heading from '../base/Heading';
 
 
 type Props = {
   card: ProductCardType;
+  paymentType: PaymentType
   styles: any;  
   classes?: string;
   fill?: boolean;
@@ -19,6 +20,7 @@ type Props = {
 const ProductCard: React.FunctionComponent<Props> = (
   {
     card,
+    paymentType,
     styles,
     classes,
     fill,
@@ -57,7 +59,9 @@ const ProductCard: React.FunctionComponent<Props> = (
         </Heading>
         <div className={styles.productCardPriceBox || ''}>
           <p className={styles.productCardPrice || ''}>
-            {`$${card.price}`}
+            {`$${paymentType === "once"
+                 ? card.price
+                 : ((card.price + (card.price * .15)) / 12).toFixed(2) + '/month'}`}
           </p>
         </div>
         <Container type="box" classes={styles.productCardLinkBox}>
