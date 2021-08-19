@@ -47,11 +47,20 @@
 }
 
 .toggle {
+  width: 60px;
+  height: 30px;
+
   &Box {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 5rem;
+  }
+
+  &:before {
+    width: 26px;
+    height: 26px;
+    border-radius: 26px;
   }
 }
 
