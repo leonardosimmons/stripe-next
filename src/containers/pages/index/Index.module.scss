@@ -27,10 +27,14 @@
   &Wrapper {
     width: 90%;
     height: 90%;
+
+    & h2 {
+      font-size: 2.8rem;
+    }
   }
 
   & span {
-    font-size: 3.6rem;
+    font-size: 4rem;
   
     &:nth-child(1) {
       margin-bottom: .5rem;
@@ -39,6 +43,15 @@
     &:nth-child(2) {
       margin-bottom: 2rem;
     }
+  }
+}
+
+.toggle {
+  &Box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem;
   }
 }
 
@@ -58,6 +71,11 @@
     font-weight: bold;
     color: var(--pure-white);
     background-color: var(--accent-color);
+  }
+
+  & p {
+    font-size: 2rem;
+    font-weight: bold;
   }
 }
 
@@ -91,6 +109,12 @@
 //* 768px
 @media only screen and (min-width: 48em) {
   .heading {
+    &Wrapper {
+      & h2 {
+        font-size: 3rem;
+      }
+    }
+
     & span {
       font-size: 5rem;
     }
