@@ -50,6 +50,10 @@ export type StaticPath = {
 };
 
 
+//** -------------------  PAYMENT  ------------------- **//
+export type PaymentType = "once" | "monthly" | "yearly";
+
+
 //** -------------------  PRODUCT  ------------------- **//
 export type Product = {
   meta: {
@@ -71,6 +75,7 @@ export type Product = {
 };
 
 export type ProductCard = {
+  id: number;
   img: NextImage;
   text: string;
   btn: Button;
