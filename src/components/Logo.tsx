@@ -10,6 +10,7 @@ type Props = NextImage & {
   link?: string;
   styles?: any;
   text?: string | JSX.Element;
+  clicked?: () => void;
 };
 
 
@@ -18,7 +19,7 @@ const Logo: React.FunctionComponent<Props> = (
     alt = 'logo',
     classes,
     height,
-    link = '#',
+    link = '/',
     loading= 'lazy',
     quality = 100,
     priority = false,
@@ -26,6 +27,7 @@ const Logo: React.FunctionComponent<Props> = (
     styles,
     text,
     width,
+    clicked,
     children
   }
 ): JSX.Element => {
@@ -44,6 +46,7 @@ const Logo: React.FunctionComponent<Props> = (
                 height={height as string}
                 quality={quality as number}
                 priority={priority}
+                onClick={clicked}
               />  
             </React.Fragment>
           : {children}

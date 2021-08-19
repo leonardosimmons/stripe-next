@@ -1,4 +1,5 @@
 
+import { NextRouter, useRouter } from 'next/router';
 import React from 'react';
 import Container from '../base/Container';
 import Grid from '../grid/Grid';
@@ -13,6 +14,7 @@ type Props = {
 
 
 const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
+  const router: NextRouter = useRouter();
   return (
     <Container type="wrapper" styles={styles}>
       <Container type="box" styles={styles}>
@@ -27,7 +29,9 @@ const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
               alt="logo"
               width= "68.5"
               height="68.5"
+              link={'/'}
               styles={styles}
+              clicked={()=> router.push('/')}
             />
           </Container>
           <Container type="content" styles={styles}>
