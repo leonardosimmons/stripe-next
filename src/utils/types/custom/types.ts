@@ -48,6 +48,8 @@ export type NextImage = {
   unoptimized?: boolean;
 };
 
+export type ProgressStage = "start" | "selection" | "payment" | "completed";
+
 export type StaticPath = {
   params: {
     id?: string;
@@ -56,11 +58,17 @@ export type StaticPath = {
 };
 
 //** --------------------  STATE  -------------------- **//
-export type Demo = {
+export type DemoContext = {
   paymentType: PaymentType;
   selectedProducts: Array<number>;
   total: number;
-}
+};
+
+export type DemoStatus = 
+| { status: 'loading', stage: ProgressStage }
+| { status: 'pending', stage: ProgressStage }
+| { status: 'completed', stage: ProgressStage, data?: any } 
+| { status: 'error', error: string, stage: ProgressStage }
 
 
 //** -------------------  PAYMENT  ------------------- **//

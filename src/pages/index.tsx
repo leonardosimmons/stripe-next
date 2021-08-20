@@ -2,11 +2,13 @@
 import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { PaymentType, Product, ProductCard as ProductCardType } from '../utils/types/custom/types';
+import { Product, ProductCard as ProductCardType } from '../utils/types/custom/types';
 
 import styles from '../containers/pages/index/Index.module.scss';
 import layoutStyles from '../containers/layout/Layout.module.scss';
 import productStyles from '../components/card/ProductCard.module.scss';
+
+import { Context } from '../context/DemoContext';
 
 import Layout from '../containers/layout/layout';
 import PaymentForm from '../components/payment-form/PaymentForm';
@@ -15,7 +17,7 @@ import Heading from '../components/base/Heading';
 import Grid from '../components/grid/Grid';
 import ProductCard from '../components/card/ProductCard';
 import Toggle from '../components/toggle/ToggleSwitch';
-import { DemoContext } from '../context/DemoContext';
+import { StatusContext } from '../context/StatusContext';
 
 
 const {
@@ -63,7 +65,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
 
 function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-  const context = React.useContext(DemoContext);
+  const context = React.useContext(Context);
+  const status = React.useContext(StatusContext);
+
+  console.log(status);
 
   //* Payment type toggle
   function handlePaymentType(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -73,8 +78,6 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
     }
     context.dispatch({ type: 'SET_PAYMENT_TYPE', payment: "once"});
   };
-
-  console.log(context.state.paymentType);
 
   //* Form handling
   function handleSelected(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -102,7 +105,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
 
   function handleSubmit(e: React.FormEvent): void {
     e.preventDefault();
-    console.log(`product id: ${context.state.selectedProducts}`);
+    status.dispatch({ type: 'TOGGLE_LOADING' });
   };
 
   function handleTotal(prods: Array<number>): void {
