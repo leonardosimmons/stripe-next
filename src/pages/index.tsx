@@ -15,6 +15,7 @@ import Heading from '../components/base/Heading';
 import Grid from '../components/grid/Grid';
 import ProductCard from '../components/card/ProductCard';
 import Toggle from '../components/toggle/ToggleSwitch';
+import { DemoContext } from '../context/DemoContext';
 
 
 const {
@@ -62,39 +63,38 @@ export const getStaticProps: GetStaticProps = async () => {
 
 
 function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-  //* Payment type toggle
-  const [ paymentType, setPaymentType ] = React.useState<PaymentType>("once");
+  const context = React.useContext(DemoContext);
 
+  //* Payment type toggle
   function handlePaymentType(e: React.ChangeEvent<HTMLInputElement>): void {
     if (e.target.checked) {
-      setPaymentType("monthly");
+      context.dispatch({ type: 'SET_PAYMENT_TYPE', payment: "monthly"});
       return;
     }
-    setPaymentType("once");
+    context.dispatch({ type: 'SET_PAYMENT_TYPE', payment: "once"});
   };
 
-  //* Form handling
-  const [ total, setTotal ] = React.useState<number>(0);
-  const [ selectedProducts, setSelectedProducts ] = React.useState<Array<number>>([]);
+  console.log(context.state.paymentType);
 
+  //* Form handling
   function handleSelected(e: React.ChangeEvent<HTMLInputElement>): void {
     let prods: Array<number> = [];
     const prod_id: number = parseInt(e.target.value);
 
     if (e.target.checked) {
-      prods = selectedProducts;
+      prods = context.state.selectedProducts;
       if (!prods.includes(prod_id)) {
         prods.push(prod_id);
-        setSelectedProducts(prods);
+        context.dispatch({ type: 'SET_SELECTED_PRODUCTS', products: prods });
         handleTotal(prods);
         return;
       }
     }
-    prods = selectedProducts.filter((product: number) => product !== prod_id);
-    setSelectedProducts(prods);
+    prods = context.state.selectedProducts.filter((product: number) => product !== prod_id);
+    context.dispatch({ type: 'SET_SELECTED_PRODUCTS', products: prods });
     
-    if (selectedProducts.length === 0) {
-      setTotal(0);
+    if (context.state.selectedProducts.length === 0) {
+      context.dispatch({ type: 'SET_TOTAL', total: 0});
       return;
     }
     handleTotal(prods);
@@ -102,7 +102,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
 
   function handleSubmit(e: React.FormEvent): void {
     e.preventDefault();
-    console.log(`product id: ${selectedProducts}`);
+    console.log(`product id: ${context.state.selectedProducts}`);
   };
 
   function handleTotal(prods: Array<number>): void {
@@ -114,7 +114,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
         }
       });
     });
-    setTotal(buffer);
+    context.dispatch({ type: 'SET_TOTAL', total: buffer});
   };
 
   return (
@@ -134,9 +134,9 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
             styles={styles}
             body={
               <div className={styles.toggleBox}>
-                <Toggle onChange={handlePaymentType} />
+                <Toggle onChange={handlePaymentType} classes={styles.toggle}/>
               </div>}>
-            {paymentType === "once"
+            {context.state.paymentType === "once"
              ? "ONE-TIME"
              : "MONTHLY"}
           </Heading>
@@ -150,6 +150,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
                       priority
                       styles={productStyles} 
                       card={card}
+                      paymentType={context.state.paymentType}
                     />
                   </label>
                   <input 
@@ -161,7 +162,13 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
                   />
                 </div>))}
             </Grid>
-            <p>{`TOTAL: $${total}`}</p>
+            <p>{`TOTAL: $${context.state.paymentType === "once"
+                           ? context.state.total
+                           : ((context.state.total + (context.state.total * .15)) / 12).toFixed(2) + '/month'}`}
+              {context.state.paymentType === "monthly"
+               ? <span>* For 12 months</span>
+               : <span>&nbsp;</span>}
+            </p>
             <input 
               type="submit" 
               className={'btn-activeFocus btn-hoverConfig'}

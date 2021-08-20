@@ -1,5 +1,6 @@
 
 import { AxiosResponse } from 'axios';
+import { Dispatch } from 'react';
 
 export type AmountToken = {
   amount: number;
@@ -23,6 +24,11 @@ export type Data<T> = {
 };
 
 export type HttpServerResponse = AxiosResponse | false;
+
+export type ContextProps<T, U> = {
+  state: T;
+  dispatch: Dispatch<U>;
+};
 
 export type NextImage = {
   src: string;
@@ -48,6 +54,13 @@ export type StaticPath = {
     slug?: string;
   };
 };
+
+//** --------------------  STATE  -------------------- **//
+export type Demo = {
+  paymentType: PaymentType;
+  selectedProducts: Array<number>;
+  total: number;
+}
 
 
 //** -------------------  PAYMENT  ------------------- **//
