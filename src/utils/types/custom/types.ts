@@ -64,11 +64,11 @@ export type DemoContext = {
   total: number;
 };
 
-export type DemoStatus = 
-| { status: 'loading', stage: ProgressStage }
-| { status: 'pending', stage: ProgressStage }
-| { status: 'completed', stage: ProgressStage, data?: any } 
-| { status: 'error', error: string, stage: ProgressStage }
+export type DemoStatus = {
+  status: 'loading' | 'pending' | 'completed' | 'error';
+  stage: ProgressStage;
+  error?: string;
+}
 
 
 //** -------------------  PAYMENT  ------------------- **//
@@ -101,6 +101,7 @@ export type ProductCard = {
   text: string;
   btn: Button;
   price: number;
+  checked: boolean;
 };
 
 export type ProductCartToken = {

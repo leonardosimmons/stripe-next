@@ -7,16 +7,21 @@ import { CardElement } from "@stripe/react-stripe-js";
 import { useStripeController } from "../../helpers/hooks/useStripeController";
 import { formatAmount } from "../../helpers/functions";
 import { AmountToken } from "../../utils/types/custom/types";
+import { Context } from "../../context/DemoContext";
 
-
-const testToken: AmountToken = {
-  amount: 450.45,
-  quantity: 1,
-  currency: 'usd'
-};
 
 const StripeCheckout: React.FunctionComponent = (): JSX.Element => {  
   const { errorCheck, form, status, submit } = useStripeController();
+  const [ token, setToken ] = React.useState<AmountToken>({} as AmountToken);
+  const context = React.useContext(Context);
+
+  React.useEffect(() => {
+    setToken({
+      amount: context.state.total,
+      quantity: 1,
+      currency: 'usd'
+    });
+  }, [context.state.total]);
 
   return (
     <div className={styles.main}>
@@ -56,7 +61,7 @@ const StripeCheckout: React.FunctionComponent = (): JSX.Element => {
                 <span 
                 id="button-text" 
                 ref={form.styles.text}>{'Pay'}</span>
-                <span id="order-amount">{` ${formatAmount(testToken)}`}</span>
+                <span id="order-amount">{` ${token.amount ? formatAmount(token as AmountToken) : '' }`}</span>
               </>
             : status.processing
               ? <span id="button-text" ref={form.styles.text}></span>

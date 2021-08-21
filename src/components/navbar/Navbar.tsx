@@ -1,6 +1,8 @@
 
 import { NextRouter, useRouter } from 'next/router';
 import React from 'react';
+import { Context } from '../../context/DemoContext';
+import { StatusContext } from '../../context/StatusContext';
 import Container from '../base/Container';
 import Grid from '../grid/Grid';
 import Logo from '../Logo';
@@ -15,6 +17,15 @@ type Props = {
 
 const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
   const router: NextRouter = useRouter();
+  const context = React.useContext(Context);
+  const status = React.useContext(StatusContext);
+
+  function returnToStart(): void {
+    context.dispatch({ type: 'RESET_CONTEXT' });
+    status.dispatch({ type: 'SET_PENDING', stage: 'start' });
+    router.push('/');
+  };
+
   return (
     <Container type="wrapper" styles={styles}>
       <Container type="box" styles={styles}>
@@ -31,7 +42,7 @@ const Navbar: React.FunctionComponent<Props> = ({}): JSX.Element => {
               height="68.5"
               link={'/'}
               styles={styles}
-              clicked={()=> router.push('/')}
+              clicked={() => returnToStart() }
             />
           </Container>
           <Container type="content" styles={styles}>

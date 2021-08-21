@@ -1,21 +1,24 @@
 
 import React from 'react';
-import { ContextProps, Demo, PaymentType } from '../utils/types/custom/types';
+import { ContextProps, DemoContext, PaymentType } from '../utils/types/custom/types';
 
 
 type DemoActions =
+| { type: 'RESET_CONTEXT' }
 | { type: 'SET_PAYMENT_TYPE', payment: PaymentType }
 | { type: 'SET_SELECTED_PRODUCTS', products: Array<number>}
 | { type: 'SET_TOTAL', total: number };
 
-const initialState: Demo = {
+const initialState: DemoContext = {
   paymentType: "once",
   selectedProducts: [],
   total: 0,
 };
 
-function reducer(state: Demo, action: DemoActions): Demo {
+function reducer(state: DemoContext, action: DemoActions): DemoContext {
   switch(action.type) {
+    case 'RESET_CONTEXT':
+      return initialState;
     case 'SET_PAYMENT_TYPE':
       return {...state, paymentType: action.payment }
     case 'SET_SELECTED_PRODUCTS':
@@ -27,7 +30,7 @@ function reducer(state: Demo, action: DemoActions): Demo {
   };
 };
         
-export const DemoContext = React.createContext({} as ContextProps<Demo, DemoActions>);
+export const Context = React.createContext({} as ContextProps<DemoContext, DemoActions>);
 
 const DemoContextProvider: React.FunctionComponent = ({ children }): JSX.Element => {
   const [ state, dispatch ] = React.useReducer(reducer, initialState);
@@ -37,9 +40,9 @@ const DemoContextProvider: React.FunctionComponent = ({ children }): JSX.Element
   }, [state, dispatch]);
 
   return (
-    <DemoContext.Provider value={contextValue}>
+    <Context.Provider value={contextValue}>
       {children}
-    </DemoContext.Provider>
+    </Context.Provider>
   );
 };
 

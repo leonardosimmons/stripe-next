@@ -6,17 +6,16 @@ import styles from './Summary.module.scss';
 
 import Heading from '../../../components/base/Heading';
 import Container from '../../../components/base/Container';
+import Link from 'next/link';
 
 
 type Props = {
-  id: Combinable;
   name: string;
   price: string;
-  addToCart: (e: React.FormEvent) => void;
 };
 
 
-const ProductSummary: React.FunctionComponent<Props> = ({ id, name, price, addToCart }):JSX.Element => {
+const ProductSummary: React.FunctionComponent<Props> = ({ name, price }):JSX.Element => {
   return (
     <Container type="wrapper" styles={styles} classes={'relative noselect'}>
       <Heading 
@@ -25,7 +24,11 @@ const ProductSummary: React.FunctionComponent<Props> = ({ id, name, price, addTo
         body={<p className={styles.headingBody}>{`$${price}`}</p>}>
         {name}
       </Heading>
-      <button className={`${styles.btn} btn-activeFocus btn-hoverConfig`}>{'SELECT'}</button>
+      <Link href={'/'}>
+        <button className={`${styles.btn} btn-activeFocus btn-hoverConfig`}>
+          {'Back to products'}
+        </button>
+      </Link>
     </Container>
   ); 
 };

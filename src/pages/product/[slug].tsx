@@ -1,7 +1,6 @@
 
 import React from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { NextRouter, useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { 
   Data, 
@@ -81,19 +80,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 
 function ProductPreview({ data }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-  /* ----------------  BASE CONTROLLERS  ---------------- */
-  const router: NextRouter = useRouter();
-  const chosenSizeRef = React.useRef<string>();
-
-  /* --------------------  FUNCTIONS  --------------------- */
-  function handleChosenSize(e: React.ChangeEvent<HTMLSelectElement>): void {
-    chosenSizeRef.current = e.target.value;
-  };
-
-  async function addToCart(e: React.FormEvent) {
-    e.preventDefault();
-  };
-
   return (
     <Layout
       styles={styles}
@@ -113,10 +99,8 @@ function ProductPreview({ data }: InferGetStaticPropsType<typeof getStaticProps>
             />
           </div>
           <ProductSummary 
-            id={data.product.id}
             name={data.product.details.name}
             price={data.product.details.price.toLocaleString()}
-            addToCart={addToCart}
           />
         </Grid>
         <ProductDetails

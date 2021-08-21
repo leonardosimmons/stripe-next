@@ -46,7 +46,8 @@ export const getStaticProps: GetStaticProps = async () => {
           link: p.preview.link,
           classes: 'btn-activeFocus'
         },
-        price: p.details.price
+        price: p.details.price,
+        checked: false
       })
       );
     }
@@ -68,7 +69,9 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
   const context = React.useContext(Context);
   const status = React.useContext(StatusContext);
 
-  console.log(status);
+  function startDemo(): void {
+    status.dispatch({ type: 'SET_PENDING', stage: 'selection' });
+  };
 
   //* Payment type toggle
   function handlePaymentType(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -80,6 +83,14 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
   };
 
   //* Form handling
+  function toggleChecked(index: number, checked: boolean): void {
+    if (checked) {
+      document.querySelector<HTMLInputElement>(`#card-${index+1}`)!.checked = true;
+      return;
+    }
+    document.querySelector<HTMLInputElement>(`#card-${index+1}`)!.checked = false;
+  };
+
   function handleSelected(e: React.ChangeEvent<HTMLInputElement>): void {
     let prods: Array<number> = [];
     const prod_id: number = parseInt(e.target.value);
@@ -105,7 +116,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
 
   function handleSubmit(e: React.FormEvent): void {
     e.preventDefault();
-    status.dispatch({ type: 'TOGGLE_LOADING' });
+    status.dispatch({ type: 'SET_PENDING', stage: 'payment' });
   };
 
   function handleTotal(prods: Array<number>): void {
@@ -127,58 +138,77 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
       classes={'noselect'}
     >
       <Container type="wrapper" styles={styles}>
-        <Heading type="main" styles={styles}>
-          <span>{'Stripe/Next.js'}</span>
-          <span>{'Integration Demo'}</span>
-        </Heading>
-        <Container type="container" styles={styles}>
+        {status.state.stage === 'start' &&
           <Heading 
-            type="sub" 
+            type="main" 
             styles={styles}
             body={
-              <div className={styles.toggleBox}>
-                <Toggle onChange={handlePaymentType} classes={styles.toggle}/>
-              </div>}>
-            {context.state.paymentType === "once"
-             ? "ONE-TIME"
-             : "MONTHLY"}
+              <div className={styles.headingBtnBox}>
+                <button 
+                  className={styles.headingBtn} 
+                  onClick={() => startDemo()}>
+                    {'Start'}
+                </button>
+              </div>
+            }>
+            <span>{'Stripe/Next.js'}</span>
+            <span>{'Integration Demo'}</span>
           </Heading>
-          <form className={`${styles.form} relative`} onSubmit={handleSubmit}>
-            <Grid even grid={styles.grid}>
-              {cards.map((card: ProductCardType, index: number) => (
-                <div className={styles.cardBox} key={index}>
-                  <label htmlFor={`card-${index+1}`}>
-                    <ProductCard 
-                      fill
-                      priority
-                      styles={productStyles} 
-                      card={card}
-                      paymentType={context.state.paymentType}
+        }
+        {status.state.stage === 'selection' &&
+          <Container type="container" styles={styles}>
+            <Heading 
+              type="sub" 
+              styles={styles}
+              body={
+                <div className={styles.toggleBox}>
+                  <Toggle onChange={handlePaymentType} classes={styles.toggle}/>
+                </div>}>
+              {context.state.paymentType === "once"
+              ? "ONE-TIME"
+              : "MONTHLY"}
+            </Heading>
+            <form className={`${styles.form} relative`} onSubmit={handleSubmit}>
+              <Grid even grid={styles.grid}>
+                {cards.map((card: ProductCardType, index: number) => (
+                  <div className={styles.cardBox} key={index}>
+                    <label htmlFor={`card-${index+1}`} onClick={() => toggleChecked(index, card.checked)}>
+                      <ProductCard 
+                        fill
+                        priority
+                        card={card}
+                        styles={productStyles} 
+                        paymentType={context.state.paymentType}
+                      />
+                    </label>
+                    <input 
+                      type="checkbox" 
+                      value={card.id}
+                      id={`card-${index+1}`} 
+                      name={`card-${index+1}`} 
+                      checked={card.checked}
+                      onChange={handleSelected}
+                      onClick={() => card.checked = !card.checked}
                     />
-                  </label>
-                  <input 
-                    type="checkbox" 
-                    id={`card-${index+1}`} 
-                    name={`card-${index+1}`} 
-                    value={card.id}
-                    onChange={handleSelected}
-                  />
-                </div>))}
-            </Grid>
-            <p>{`TOTAL: $${context.state.paymentType === "once"
-                           ? context.state.total
-                           : ((context.state.total + (context.state.total * .15)) / 12).toFixed(2) + '/month'}`}
-              {context.state.paymentType === "monthly"
-               ? <span>* For 12 months</span>
-               : <span>&nbsp;</span>}
-            </p>
-            <input 
-              type="submit" 
-              className={'btn-activeFocus btn-hoverConfig'}
-            />
-          </form>
-        </Container>
-        <PaymentForm />
+                  </div>))}
+              </Grid>
+              <p>{`TOTAL: $${context.state.paymentType === "once"
+                            ? context.state.total
+                            : ((context.state.total + (context.state.total * .15)) / 12).toFixed(2) + '/month'}`}
+                {context.state.paymentType === "monthly"
+                ? <span>* For 12 months</span>
+                : <span>&nbsp;</span>}
+              </p>
+              <input 
+                type="submit" 
+                className={'btn-activeFocus btn-hoverConfig'}
+              />
+            </form>
+          </Container>
+        }
+        {status.state.stage === 'payment' &&
+          <PaymentForm />
+        }
       </Container>
     </Layout>
   );
