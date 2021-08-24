@@ -42,7 +42,7 @@ const ShippingForm: React.FunctionComponent = (): JSX.Element => {
       status.dispatch({ type: 'SET_PENDING', stage: 'payment' });
       return;
     }
-    alert(validate.error);
+    status.dispatch({ type: 'SET_ERROR', error: validate.error, stage: 'shipping' });
     return;
   };
 
@@ -70,9 +70,21 @@ const ShippingForm: React.FunctionComponent = (): JSX.Element => {
           placeholder={'Enter state'} 
           styles={styles}
           changed={(e: React.ChangeEvent<HTMLInputElement>) => context.dispatch({ type: 'SET_STATE', state: e.target.value})}/>
+        {status.state.error &&
+          <div className={styles.errorBox}>
+            <span className={styles.error}>{status.state.error}</span>
+          </div>
+        }
         <div className={styles.btnBox}>
-          <Input type={'reset'} value={'RESET'} classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}/>
-          <Input type={'submit'} value={'SUBMIT'} classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}/>
+          <Input 
+            type={'reset'} 
+            value={'RESET'} 
+            classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}
+            clicked={() => status.dispatch({ type: 'SET_ERROR', error: '', stage: 'shipping' })}/>
+          <Input 
+            type={'submit'} 
+            value={'SUBMIT'} 
+            classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}/>
         </div>
       </form>
       <div className={styles.btnBox}>
