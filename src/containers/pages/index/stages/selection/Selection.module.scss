@@ -1,0 +1,105 @@
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all .5s;
+}
+
+.toggle {
+  width: 60px;
+  height: 30px;
+
+  &Box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem;
+  }
+
+  &:before {
+    width: 26px;
+    height: 26px;
+    border-radius: 26px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & p {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 2rem;
+    font-weight: bold;
+
+    & span {
+      margin-top: 1rem;
+      font-size: 1.4rem;
+      font-weight: 300;
+    }
+  }
+}
+
+.grid {
+  width: 100%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 2rem;
+}
+
+.btn {
+  width: 13ch;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  padding: 1rem 1.6rem;
+  border: none;
+  border-radius: .7rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--pure-white);
+  background-color: var(--accent-color);
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  &Box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+}
+
+//* 1024px
+@media only screen and (min-width: 64em) {
+  .grid {
+    width: 70%
+  }
+}
+
+//* 1280px
+@media only screen and (min-width: 80em) {
+  .grid {
+    width: 80%;
+    max-width: 800px;
+  }
+}

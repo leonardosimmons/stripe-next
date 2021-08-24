@@ -3,12 +3,12 @@ import React from 'react';
 
 import styles from './Shipping.module.scss';
 
-import { Context } from '../../context/DemoContext';
-import { StatusContext } from '../../context/StatusContext';
+import { Context } from '../../../../../context/DemoContext';
+import { StatusContext } from '../../../../../context/StatusContext';
 
-import Container from '../base/Container';
-import Input from '../base/Input';
-import useValidation from '../../helpers/hooks/useValidation';
+import Container from '../../../../../components/base/Container';
+import Input from '../../../../../components/base/Input';
+import useValidation from '../../../../../helpers/hooks/useValidation';
 
 
 const ShippingForm: React.FunctionComponent = (): JSX.Element => {

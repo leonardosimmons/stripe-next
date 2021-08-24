@@ -1,7 +1,7 @@
 
 import React from "react";
 
-import styles from './PaymentForm.module.scss';
+import styles from './StripeCheckout.module.scss';
 
 import { CardElement } from "@stripe/react-stripe-js";
 import { useStripeController } from "../../helpers/hooks/useStripeController";
