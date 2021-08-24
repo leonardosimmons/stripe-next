@@ -8,6 +8,26 @@ export type AmountToken = {
   currency: string;
 };
 
+export type BaseOptions = {
+  bgImage?: string;
+  classes?: string;
+  column?: boolean;
+  id?: string | number;
+  index?: string | number;
+  link?: string;
+  main?: boolean;
+  parent?: string;
+  sub?: string;
+  styles?: any;
+  toggle?: boolean;
+  type?: string;
+  uppercase?: boolean;
+  value?: any;
+  video?: string;
+  changed?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  clicked?: () => void;
+};
+
 export type Button = {
   text:  string | number | JSX.Element | HTMLElement;
   link: string;
@@ -48,7 +68,7 @@ export type NextImage = {
   unoptimized?: boolean;
 };
 
-export type ProgressStage = "start" | "selection" | "payment" | "completed";
+export type ProgressStage = "start" | "selection" | "payment" | "shipping" | "completed";
 
 export type StaticPath = {
   params: {
@@ -61,6 +81,12 @@ export type StaticPath = {
 export type DemoContext = {
   paymentType: PaymentType;
   selectedProducts: Array<number>;
+  shipping: {
+    address: string;
+    city: string;
+    postal: string;
+    state: string;
+  }
   total: number;
 };
 

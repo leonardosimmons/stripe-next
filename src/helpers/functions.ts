@@ -1,5 +1,5 @@
 
-import { AmountToken } from "../utils/types/custom/types";
+import { AmountToken, Combinable } from "../utils/types/custom/types";
 
 
 export function formatAmount({amount, quantity, currency}: AmountToken): string {
@@ -20,4 +20,11 @@ export function formatAmount({amount, quantity, currency}: AmountToken): string 
   const total: number = parseInt((quantity * amount).toFixed(amount));
 
   return numFormat.format(total);
+};
+
+ export function preg_match(regex: string, c: Combinable): boolean | undefined {
+  if (typeof c === 'string')
+    return (new RegExp(regex).test(c));
+  if (typeof c === 'number') 
+    return (new RegExp(regex).test(c.toString()));
 };
