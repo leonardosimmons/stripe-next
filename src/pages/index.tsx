@@ -9,6 +9,7 @@ import layoutStyles from '../containers/layout/Layout.module.scss';
 import productStyles from '../components/card/ProductCard.module.scss';
 
 import { Context } from '../context/DemoContext';
+import { StatusContext } from '../context/StatusContext';
 
 import Layout from '../containers/layout/layout';
 import PaymentForm from '../components/payment-form/PaymentForm';
@@ -17,7 +18,7 @@ import Heading from '../components/base/Heading';
 import Grid from '../components/grid/Grid';
 import ProductCard from '../components/card/ProductCard';
 import Toggle from '../components/toggle/ToggleSwitch';
-import { StatusContext } from '../context/StatusContext';
+import ShippingForm from '../components/shipping/Shipping';
 
 
 const {
@@ -82,7 +83,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
     context.dispatch({ type: 'SET_PAYMENT_TYPE', payment: "once"});
   };
 
-  //* Form handling
+  //* Prodcut Selection Form handling
   function toggleChecked(index: number, checked: boolean): void {
     if (checked) {
       document.querySelector<HTMLInputElement>(`#card-${index+1}`)!.checked = true;
@@ -116,7 +117,7 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
 
   function handleSubmit(e: React.FormEvent): void {
     e.preventDefault();
-    status.dispatch({ type: 'SET_PENDING', stage: 'payment' });
+    status.dispatch({ type: 'SET_PENDING', stage: 'shipping' });
   };
 
   function handleTotal(prods: Array<number>): void {
@@ -201,10 +202,13 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
               </p>
               <input 
                 type="submit" 
-                className={'btn-activeFocus btn-hoverConfig'}
+                className={`${styles.btn} btn-activeFocus btn-hoverConfig`}
               />
             </form>
           </Container>
+        }
+        {status.state.stage === "shipping" &&
+          <ShippingForm />
         }
         {status.state.stage === 'payment' &&
           <PaymentForm />
