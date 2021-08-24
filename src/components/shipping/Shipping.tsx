@@ -8,13 +8,13 @@ import { StatusContext } from '../../context/StatusContext';
 
 import Container from '../base/Container';
 import Input from '../base/Input';
-import { ValidationController } from '../../helpers/ValidationController';
+import useValidation from '../../helpers/hooks/useValidation';
 
 
 const ShippingForm: React.FunctionComponent = (): JSX.Element => {
+  const validate = useValidation();
   const context = React.useContext(Context);
   const status = React.useContext(StatusContext);
-  const validate: ValidationController = new ValidationController();
 
   function validateShipping(): void {
     let fail: string = '';
@@ -23,6 +23,10 @@ const ShippingForm: React.FunctionComponent = (): JSX.Element => {
     fail = fail.concat(validate.postalCode(parseInt(context.state.shipping.postal)));
     fail = fail.concat(validate.state(context.state.shipping.state));
     
+    if (validate.error) {
+      validate.error = '';
+    }
+
     if (fail === '') {
       validate.validate();
       return;
