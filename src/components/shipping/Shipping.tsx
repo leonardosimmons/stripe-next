@@ -8,15 +8,38 @@ import { StatusContext } from '../../context/StatusContext';
 
 import Container from '../base/Container';
 import Input from '../base/Input';
+import { ValidationController } from '../../helpers/ValidationController';
 
 
 const ShippingForm: React.FunctionComponent = (): JSX.Element => {
   const context = React.useContext(Context);
   const status = React.useContext(StatusContext);
+  const validate: ValidationController = new ValidationController();
+
+  function validateShipping(): void {
+    let fail: string = '';
+    fail = fail.concat(validate.address(context.state.shipping.address));
+    fail = fail.concat(validate.content(context.state.shipping.city, 2, 'city'));
+    fail = fail.concat(validate.postalCode(parseInt(context.state.shipping.postal)));
+    fail = fail.concat(validate.state(context.state.shipping.state));
+    
+    if (fail === '') {
+      validate.validate();
+      return;
+    }
+    validate.error = fail;
+  };
 
   function handleShipping(e: React.FormEvent): void {
     e.preventDefault();
-    status.dispatch({ type: 'SET_PENDING', stage: 'payment' });
+    validateShipping();
+    
+    if (validate.isValidated) {
+      status.dispatch({ type: 'SET_PENDING', stage: 'payment' });
+      return;
+    }
+    alert(validate.error);
+    return;
   };
 
   return (
@@ -44,12 +67,16 @@ const ShippingForm: React.FunctionComponent = (): JSX.Element => {
           styles={styles}
           changed={(e: React.ChangeEvent<HTMLInputElement>) => context.dispatch({ type: 'SET_STATE', state: e.target.value})}/>
         <div className={styles.btnBox}>
-          <Input type={'reset'} value={'RESET'} classes={`${styles.btn} btn-activeFocus btn-hoverConfig`}/>
-          <Input type={'submit'} value={'SUBMIT'} classes={`${styles.btn} btn-activeFocus btn-hoverConfig`}/>
+          <Input type={'reset'} value={'RESET'} classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}/>
+          <Input type={'submit'} value={'SUBMIT'} classes={`${styles.btn} relative btn-activeFocus btn-hoverConfig`}/>
         </div>
       </form>
       <div className={styles.btnBox}>
-        <button className={styles.btn} onClick={() => { status.dispatch({ type: 'SET_PENDING', stage: 'selection' })}}>Back</button>
+        <button 
+          className={`${styles.btn} relative btn-activeFocus btn-hoverConfig`} 
+          onClick={() => { status.dispatch({ type: 'SET_PENDING', stage: 'selection' })}}>
+            {'Back'}
+        </button>
       </div>
     </Container>
   );
