@@ -76,13 +76,16 @@ function Index({ cards, products }: InferGetStaticPropsType<typeof getStaticProp
           <Intro />
         }
         {status.state.stage === 'selection' &&
-          <ProductSelection cards={cards} products={products}/>
+          <ProductSelection 
+            cards={cards} 
+            products={products}
+          />
         }
         {status.state.stage === "shipping" &&
           <ShippingForm />
         }
         {status.state.stage === 'payment' &&
-          <PaymentForm />
+          <PaymentForm products={products}/>
         }
       </Container>
     </Layout>

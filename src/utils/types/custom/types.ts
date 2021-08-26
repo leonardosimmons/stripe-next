@@ -129,30 +129,3 @@ export type ProductCard = {
   price: number;
   checked: boolean;
 };
-
-export type ProductCartToken = {
-  user: Partial<UserContext>;
-  product: Product;
-  order: {
-    id: number;
-    size: string;
-    quantity: number;
-  };
-};
-
-//** -------------------  USER  -------------------- *//
-export type UserInfo = {
-  name: string;
-  email: string;
-  image: string;
-  password?: string;
-};
-
-export type UserContext = {
-  id: Combinable;
-  info: UserInfo;
-  status: {
-    isSignedIn: boolean;
-    isError: boolean;
-  };
-};
