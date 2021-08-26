@@ -1,0 +1,278 @@
+
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+
+  margin: 0 auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+}
+
+.contentBox {
+  height: 98%;
+  width: 100%;
+}
+
+.grid {
+  height: 100%;
+  flex: 0 1 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+ 
+.img {
+  &Box {
+    height: 300px;
+    margin-bottom: 2rem;
+  }
+}
+
+.details {
+  &Box {
+    height: 100%;
+    flex: 0 1 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &Grid {
+    height: 95%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+
+    & > button {
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: 700;
+      background-color: transparent;
+    }
+  }
+  
+  &Heading {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    border-right: .5px solid var(--grey-500);
+
+    & > h2 {
+      font-size: 1.8rem;
+      font-weight: 200;
+    }
+
+    & > p {
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+  }
+
+  &Avail {
+    & > p {
+      font-size: 1.2rem;      
+    }
+
+    & > p:nth-child(1) {
+      font-weight: 600;
+    }
+
+    & > p:nth-child(2) {
+      margin: 1rem auto;
+      color: var(--grey-900);
+    }
+  }
+}
+
+.options {
+  &Box {
+    height: 100%;
+    flex: 0 1 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > :nth-child(1) {
+      align-self: flex-start;
+    }
+  }
+
+  &Grid {
+    height: 60%;
+    flex: 0 1 40%;
+
+    display: flex;
+    flex-direction: column-reverse !important;
+  }
+}
+
+
+.price {
+  &Box {
+    height: 90%;
+    width: 100%;
+    text-align: center;
+
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    font-size: 1.8rem;
+    font-weight: 200;
+  }
+}
+
+
+//* 368px
+@media only screen and (min-width: 23em) {
+  
+}
+
+//* 768px
+@media only screen and (min-width: 48em) {
+  .wrapper {
+    height: 125px;
+  }
+  
+  .grid {
+    flex-direction: row;
+  }
+
+  .img {
+    &Box {
+      height: 100%;
+      flex: 0 1 30%;
+      padding: 1rem;
+      margin-right: 2rem;
+      margin-bottom: 0;
+    }
+  }
+
+  .details {
+    &Grid {
+      display: flex;
+      flex-direction: column !important;
+
+      text-align: left;
+
+      & > button {
+        width: 10ch;
+        text-align: left;
+        transition: all .3s;
+
+        &:hover {
+          transform: translateY(-.15rem);
+        }
+      }
+    }
+
+    &Heading {
+      margin-top: 0;
+    }
+
+    &Avail {
+      & > p:nth-child(2) {
+        margin: 0;
+        text-align: left;
+      }
+    }
+  }
+
+  .options {
+    &Grid {
+      height: 100%;
+      flex-direction: column !important;
+    }
+  }
+
+  .price {
+    &Box {   
+      margin-top: 0;
+      margin-bottom: 0;
+  
+      font-size: 1.8rem;
+    }
+  }
+}
+
+//* 1024px
+@media only screen and (min-width: 64em) {
+  .img {
+    &Box {
+      flex: 0 1 25%;
+    }
+  }
+
+  .options {
+    &Grid {
+      flex: 0 1 70%;
+
+      height: 100%;
+      display: flex;
+      flex-direction: row !important;
+    }
+
+    &Box {
+      flex: 0 1 80%;
+    }
+  }
+
+  .qty {
+    &Form {
+      height: 90%;
+
+      text-align: left;
+
+      & > select {
+        font-size: 1.4rem;
+        padding: .5rem;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .price {
+    &Box {
+      height: 90%;
+      width: 90%;
+      text-align: right;
+    }
+  }
+}
+
+//* 1280px
+@media only screen and (min-width: 80px) {
+  .details {
+    &Heading {
+      & > h2 {
+        font-size: 2.2rem;
+      }
+  
+      & > p {
+        font-size: 1.2rem;
+      }
+    }
+  
+    &Avail {
+      & > p:nth-child(1) {
+        font-weight: 600;
+        font-size: 1.2rem;      
+      }
+  
+      & > p:nth-child(2) {
+        width: 80%;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
